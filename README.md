@@ -1,6 +1,6 @@
 Wordle  project
 
-Group : Mohammed Alami - Sara Benali - Karim El Idrissi
+Group : Belhadj Abdelhakim - Mekdam mohamed idir - Lamara ayoub
 
 How to run  
 1. Download repo  
