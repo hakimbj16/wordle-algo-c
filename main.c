@@ -4,7 +4,7 @@
 #include <time.h>
 #include <ctype.h>
 
-// Mohammed Alami - Sara Benali - Karim El Idrissi
+// Belhadj Abdelhakim - Mekdam mohamed idir - Lamara ayoub
 
 
 #define MAX_WORDS 10000
