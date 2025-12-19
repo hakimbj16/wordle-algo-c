@@ -3,6 +3,7 @@
 Group: Belhadj Abdelhakim - Mekdam Mohamed Idir - Lamara Ayoub
 
 Simple Wordle game and solver 
+
 How to run:
 gcc main.c -o wordle
 ./wordle
