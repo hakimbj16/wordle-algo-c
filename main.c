@@ -4,10 +4,10 @@
 #include <time.h>
 #include <ctype.h>
 
-// Wordle Project ALGO3 - Group: Mohammed Alami, Sara Benali, Karim El Idrissi
-// Simple game + solver in one file
+// Mohammed Alami - Sara Benali - Karim El Idrissi
 
-#define MAX_WORDS 15000
+
+#define MAX_WORDS 10000
 #define WORD_LEN 5
 #define MAX_GUESSES 6
 
@@ -18,179 +18,146 @@ typedef struct {
 Word dictionary[MAX_WORDS];
 int num_words = 0;
 
-// Load words from file
+// load words.txt
 int load_dictionary(const char* filename) {
     FILE* file = fopen(filename, "r");
     if (!file) {
-        printf("Error: Can't open %s! Put words.txt in folder.\n", filename);
+        printf("No words.txt ! Put it next to program\n");
         return 0;
     }
     char buffer[20];
     while (fgets(buffer, sizeof(buffer), file) && num_words < MAX_WORDS) {
         buffer[strcspn(buffer, "\n")] = 0;
         if (strlen(buffer) == WORD_LEN) {
-            for (int i = 0; i < WORD_LEN; i++) buffer[i] = tolower(buffer[i]);
             strcpy(dictionary[num_words++].word, buffer);
         }
     }
     fclose(file);
-    printf("Loaded %d words.\n", num_words);
     return num_words;
 }
 
-int is_valid_word(const char* guess) {
-    for (int i = 0; i < num_words; i++) {
-        if (strcmp(dictionary[i].word, guess) == 0) return 1;
-    }
+int is_valid(const char* g) {
+    for (int i = 0; i < num_words; i++)
+        if (strcmp(dictionary[i].word, g) == 0) return 1;
     return 0;
 }
 
-// Feedback: 0=gray, 1=yellow, 2=green
-int* get_feedback(const char* target, const char* guess) {
-    int* fb = malloc(WORD_LEN * sizeof(int));
-    int count[26] = {0};
-    for (int i = 0; i < WORD_LEN; i++) {
-        if (guess[i] == target[i]) {
-            fb[i] = 2;
-        } else {
-            fb[i] = 0;
-            count[target[i] - 'a']++;
+// 0 gray - 1 yellow - 2 green
+int* feedback(const char* target, const char* guess) {
+    int* f = malloc(5 * sizeof(int));
+    int cnt[26] = {0};
+    for (int i = 0; i < 5; i++) {
+        if (guess[i] == target[i]) f[i] = 2;
+        else {
+            f[i] = 0;
+            cnt[target[i]-'a']++;
         }
     }
-    for (int i = 0; i < WORD_LEN; i++) {
-        if (fb[i] == 0) {
-            int let = guess[i] - 'a';
-            if (count[let] > 0) {
-                fb[i] = 1;
-                count[let]--;
-            }
+    for (int i = 0; i < 5; i++) {
+        if (f[i] == 0) {
+            int l = guess[i]-'a';
+            if (cnt[l] > 0) { f[i] = 1; cnt[l]--; }
         }
     }
-    return fb;
+    return f;
 }
 
-void print_feedback(int* fb) {
-    for (int i = 0; i < WORD_LEN; i++) {
-        if (fb[i] == 2) printf("G ");
-        else if (fb[i] == 1) printf("Y ");
+void print_f(int* f) {
+    for (int i = 0; i < 5; i++) {
+        if (f[i]==2) printf("G ");
+        else if (f[i]==1) printf("Y ");
         else printf("- ");
     }
     printf("\n");
 }
 
-// Human play
-void play_game(const char* target) {
-    char guess[WORD_LEN + 1];
-    for (int att = 1; att <= MAX_GUESSES; att++) {
-        printf("\nGuess %d/6: ", att);
-        if (!scanf("%5s", guess)) continue;
-        for (int i = 0; i < WORD_LEN; i++) guess[i] = tolower(guess[i]);
-        guess[WORD_LEN] = 0;
-
-        if (strlen(guess) != WORD_LEN || !is_valid_word(guess)) {
-            printf("Invalid! Must be 5 letters from dictionary.\n");
-            att--;
+void play(const char* target) {
+    char g[6];
+    int att = 1;
+    while (att <= 6) {
+        printf("Guess %d : ", att);
+        scanf("%5s", g);
+        for (int i=0; i<5; i++) g[i]=tolower(g[i]);
+        if (strlen(g)!=5 || !is_valid(g)) {
+            printf("Not good word - try again\n");
             continue;
         }
-
-        int* fb = get_feedback(target, guess);
-        print_feedback(fb);
-        if (strcmp(guess, target) == 0) {
-            printf("You won in %d guesses!\n", att);
-            free(fb);
-            return;
+        int* f = feedback(target, g);
+        print_f(f);
+        if (strcmp(g, target)==0) {
+            printf("You win !! %d tries\n", att);
+            free(f); return;
         }
-        free(fb);
+        free(f); att++;
     }
-    printf("Lost! Word was %s\n", target);
+    printf("Lost - word was %s\n", target);
 }
 
-// Rough letter freq scores (higher = more common)
-int freq[26] = {8,1,3,4,12,2,2,5,7,1,1,4,2,7,8,2,1,6,6,9,3,1,2,1,2,1}; // approx
-
-int score_word(const char* w) {
-    int used[26] = {0};
-    int sc = 0;
-    for (int i = 0; i < WORD_LEN; i++) {
-        int l = w[i] - 'a';
-        if (!used[l]) {
-            sc += freq[l];
-            used[l] = 1;
-        }
+int score(const char* w) {
+    int u[26]={0}, s=0;
+    int fr[26]={8,1,3,4,12,2,2,5,7,1,1,4,2,7,8,2,1,6,6,9,3,1,2,1,2,1};
+    for (int i=0; i<5; i++) {
+        int l = w[i]-'a';
+        if (!u[l]) { s += fr[l]; u[l]=1; }
     }
-    return sc;
+    return s;
 }
 
-// Solver
-void solve_game(const char* target) {
-    Word possibles[MAX_WORDS];
-    memcpy(possibles, dictionary, num_words * sizeof(Word));
-    int count = num_words;
+void solve(const char* target) {
+    Word p[MAX_WORDS];
+    for (int i=0; i<num_words; i++) p[i]=dictionary[i];
+    int cnt = num_words;
 
-    char guess[WORD_LEN + 1] = "raise"; // good starter: common letters
-    printf("Solver starting with: %s\n", guess);
+    char guess[6] = "raise"; // best simple start
+    printf("I start with raise\n");
 
-    for (int att = 1; att <= MAX_GUESSES; att++) {
-        printf("\nGuess %d: %s\n", att, guess);
-        int* fb = get_feedback(target, guess);
-        print_feedback(fb);
+    int att=1;
+    while (att <= 6) {
+        printf("Guess %d : %s\n", att, guess);
+        int* f = feedback(target, guess);
+        print_f(f);
 
-        if (strcmp(guess, target) == 0) {
-            printf("Solved in %d guesses!\n", att);
-            free(fb);
-            return;
+        if (strcmp(guess, target)==0) {
+            printf("Done in %d !! \n", att);
+            free(f); return;
         }
 
-        // Filter
-        int new_count = 0;
-        for (int i = 0; i < count; i++) {
-            int* test = get_feedback(possibles[i].word, guess);
-            int match = 1;
-            for (int j = 0; j < WORD_LEN; j++) if (test[j] != fb[j]) { match = 0; break; }
-            free(test);
-            if (match) strcpy(possibles[new_count++].word, possibles[i].word);
+        int newc = 0;
+        for (int i=0; i<cnt; i++) {
+            int* tf = feedback(p[i].word, guess);
+            int ok=1;
+            for (int j=0; j<5; j++) if (tf[j] != f[j]) ok=0;
+            free(tf);
+            if (ok) p[newc++] = p[i];
         }
-        count = new_count;
-        free(fb);
-        printf("Remaining words: %d\n", count);
+        cnt = newc;
+        free(f);
 
-        if (count <= 1) {
-            strcpy(guess, possibles[0].word);
-            continue;
-        }
+        if (cnt==1) { strcpy(guess, p[0].word); continue; }
 
-        // Pick best score
-        int best_sc = -1;
-        char best[WORD_LEN + 1];
-        for (int i = 0; i < count; i++) {
-            int sc = score_word(possibles[i].word);
-            if (sc > best_sc) {
-                best_sc = sc;
-                strcpy(best, possibles[i].word);
-            }
+        int bs = -1; char best[6];
+        for (int i=0; i<cnt; i++) {
+            int s = score(p[i].word);
+            if (s > bs) { bs=s; strcpy(best, p[i].word); }
         }
         strcpy(guess, best);
+        att++;
     }
-    printf("Failed! (rare with good dict)\n");
+    printf("Hard one ... failed\n");
 }
 
-int main(int argc, char** argv) {
-    srand(time(NULL));
+int main() {
+    srand(time(0));
     if (!load_dictionary("words.txt")) return 1;
 
-    int idx = rand() % num_words;
-    char target[WORD_LEN + 1];
-    strcpy(target, dictionary[idx].word);
+    int r = rand() % num_words;
+    char target[6]; strcpy(target, dictionary[r].word);
 
-    printf("Wordle ALGO3 Project\n");
-    printf("1. Play as human\n");
-    printf("2. Watch solver\n");
-    printf("Choose: ");
-    int mode;
-    scanf("%d", &mode);
+    printf("1 = You play\n2 = Watch me solve\nChoice ? ");
+    int ch; scanf("%d", &ch);
 
-    if (mode == 2) solve_game(target);
-    else play_game(target);
+    if (ch==2) solve(target);
+    else play(target);
 
     return 0;
 }
