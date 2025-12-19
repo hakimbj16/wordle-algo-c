@@ -1,16 +1,18 @@
-Wordle  project
+# Wordle ALGO3 Project
 
-Group : Belhadj Abdelhakim - Mekdam mohamed idir - Lamara ayoub
+Group: Belhadj Abdelhakim - Mekdam Mohamed Idir - Lamara Ayoub
 
-How to run  
-1. Download repo  
-2. Put words.txt next to main.c  
-3. gcc main.c -o wordle  
-4. ./wordle  
-   Choose 1 → play yourself  
-   Choose 2 → watch solver
+Simple Wordle game and solver 
+How to run:
+gcc main.c -o wordle
+./wordle
 
-Screenshots below  
-(see report.pdf for full explanation)
-play
-solver
+1 = Play as human
+2 = Watch solver
+
+Screenshots:
+
+[Human play](screenshot1.png)
+[Solver](screenshot2.png)
+
+Full report: report.pdf
