@@ -1,19 +1,22 @@
 # Wordle ALGO3 Project
 
-Group: Belhadj Abdelhakim - Mekdam Mohamed Idir - Lamara Ayoub
+**Group:** Belhadj Abdelhakim - Mekdam Mohamed Idir - Lamara Ayoub
 
-Simple Wordle game and solver 
+Simple Wordle game and automated solver in C.
 
-How to run:
-gcc main.c -o wordle
-./wordle
+## How to run
+- Put words.txt in the same folder
+- gcc main.c -o wordle
+- ./wordle
+  - Choose 1: Play as human
+  - Choose 2: Watch the solver
 
-1 = Play as human
-2 = Watch solver
+## Screenshots
 
-Screenshots:
+### Human Play
+![Human play](screenshot_human.png)
 
-[Human play](screenshot2.png)
-[Solver](screenshot1.png)
+### Automated Solver
+![Solver](screenshot_solver.png)
 
-Full report: report.pdf
+See report.pdf for details
