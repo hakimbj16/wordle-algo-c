@@ -12,7 +12,7 @@ gcc main.c -o wordle
 
 Screenshots:
 
-[Human play](screenshot1.png)
-[Solver](screenshot2.png)
+[Human play](screenshot2.png)
+[Solver](screenshot1.png)
 
 Full report: report.pdf
