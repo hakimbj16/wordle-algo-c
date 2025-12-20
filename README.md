@@ -4,12 +4,14 @@
 
 Simple Wordle game and automated solver in C.
 
-## How to run
-- Put words.txt in the same folder
-- gcc main.c -o wordle
-- ./wordle
-  - Choose 1: Play as human
-  - Choose 2: Watch the solver
+## How to run 
+
+1. Put main.c and words.txt in the same folder
+2. Open the project in Code::Blocks (or any C compiler)
+3. Click Build & Run 
+
+
+Choose 1 to play, 2 to watch solver.
 
 ## Screenshots
 
