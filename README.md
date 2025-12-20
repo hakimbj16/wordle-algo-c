@@ -21,4 +21,4 @@ Choose 1 to play, 2 to watch solver.
 ### Automated Solver
 ![Solver](screenshot_solver.png)
 
-See report.pdf for all details
+
