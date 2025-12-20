@@ -108,8 +108,8 @@ void solve(const char* target) {
     for (int i=0; i<num_words; i++) p[i]=dictionary[i];
     int cnt = num_words;
 
-    char guess[6] = "raise"; // best simple start
-    printf("I start with raise\n");
+    char guess[6] = "water"; 
+    printf("I start with water\n");
 
     int att=1;
     while (att <= 6) {
@@ -143,7 +143,7 @@ void solve(const char* target) {
         strcpy(guess, best);
         att++;
     }
-    printf("Hard one ... failed\n");
+    printf("Hard one , failed\n");
 }
 
 int main() {
