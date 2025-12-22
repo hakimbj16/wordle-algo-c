@@ -7,7 +7,7 @@ Simple Wordle game and automated solver in C.
 ## How to run 
 
 1. Put main.c and words.txt in the same folder
-2. Open the project in Code::Blocks (or any C compiler)
+2. Open the project in CodeBlocks (or any C compiler)
 3. Click Build & Run 
 
 
